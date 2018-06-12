@@ -39,10 +39,12 @@ interpreter_loop:
 	jz .exit
 	test rdx, rdx       ;rdx = str's length
 	jz .exit
-	mov rsi, next       ;rsi = pointer to last word in a dict
 	mov rdi, rax        ;rdi = pointer to a key
+	mov rsi, prev       ;rsi = pointer to the last word in a dict
+	push rdi	    ;save pointer to a key
 	call find_word
-	test rax, rax 
+	test rax, rax
+	pop rdi 
 	jz .no_word
 	mov rdi, rax        ;rdi = addr
 	call cfa
@@ -53,11 +55,13 @@ interpreter_loop:
 	mov pc, xt_interpreter
 	jmp next
 .no_word:
-	mov rdi, rax
+	;mov rdi, rax
 	call parse_int	;check if word is a number
 	test rdx, rdx
 	jz .error		; if no number
 	push rax
+	mov pc, xt_interpreter
+	jmp next
 .error:
 	mov pc, xt_interpreter
 	mov rdi, error

@@ -72,31 +72,35 @@
        call find_word
        jmp next
 
+native bye, "bye"
+      call exit
+
    native cfa, "cfa"
        call cfa
        jmp next
 
-   native bye, "bye"
-      call exit
+   
 
 ;------------------------------------------------------
 
 ;rdi pointer to a key
 ;rsi pointer to the last word in a dictionary
 find_word:
-   mov r11, rsi                  ;saving pointer to word
-   mov r8, rdi                   ;saving pointer to key 
 .go:
-   mov rdi, rsi
-   call string_length            ;how much symbols in the key
-   mov rdi, r8                   ;restore rdi
-   mov r9, rax                   ;string length
+   push rdi
+   push rsi 
    call string_equals
+   pop rsi
+   pop rdi
    cmp rax, 1                    ;if strings are equals, rax=1 
-   jz .end                
-   lea rsi, [rsi+r9+1]             ;pointer to the next word  
-   mov rsi, [rsi]   
-   test rsi, rsi                  ;have we words in a dctionary?  
+   jz .end    
+   push rdi
+   mov rdi, rsi            
+   call string_length
+   pop rdi
+   lea rsi, [rsi + rax + 1]	;addr of the next word
+   mov rsi, [rsi]
+   test rsi, rsi  		;end of a dict?
    jz .no_word
    jmp .go    
 .end:
