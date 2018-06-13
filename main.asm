@@ -50,8 +50,8 @@ interpreter_loop:
 	call cfa
 
 
-;	mov [program_stub], rax		;magic
-;	mov pc, program_stub		;magic
+	mov [program_stub], rax		;magic
+	mov pc, program_stub		;magic
 	mov pc, rax
 	jmp next
 .exit:

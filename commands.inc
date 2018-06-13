@@ -244,6 +244,8 @@
 ;------------------------------------------------------
 
 ;rdi pointer to a key
+
+;rdi pointer to a key
 ;rsi pointer to the last word in a dictionary
 find_word:
 .go:
@@ -251,8 +253,10 @@ find_word:
    push rsi 
    call string_equals
    pop rsi
+   pop rdi
    cmp rax, 1                    ;if strings are equals, rax=1 
    jz .end    
+   push rdi
    mov rdi, rsi            
    call string_length
    pop rdi
