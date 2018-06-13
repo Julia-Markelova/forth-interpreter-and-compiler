@@ -10,7 +10,7 @@ rstack_start: resq 1
 input_buf:    resq 1024
 
 section .data
-error: db "Error : unknown word.", 0
+error: db "Error : unknown word.", 10, 0
 
 program_stub: dq 0
 xt_interpreter: dq .interpreter
@@ -40,33 +40,32 @@ interpreter_loop:
 	test rdx, rdx       ;rdx = str's length
 	jz .exit
 	mov rdi, rax        ;rdi = pointer to a key
+	
 	mov rsi, last       ;rsi = pointer to the last word in a dict
 	push rdi	    ;save pointer to a key
 	call find_word
+	pop rdi
 	test rax, rax
-	pop rdi 
-	jz .no_word	
+	jz .no_word
 	mov rdi, rax        ;rdi = addr
 	call cfa
-
-
 	mov [program_stub], rax		;magic
 	mov pc, program_stub		;magic
-	mov pc, rax
 	jmp next
 .exit:
 	mov pc, xt_interpreter
 	jmp next
+
 .no_word:
 	;mov rdi, rax
-	call parse_int	;check if word is a number
-	test rdx, rdx
+	;mov rdi, input_buf
+	;call parse_int	;check if word is a number
+	;test rdx, rdx
 	jz .error		; if no number
 	push rax
 	mov pc, xt_interpreter
 	jmp next
 .error:
-	mov pc, xt_interpreter
 	mov rdi, error
 	call string_length
 	mov rdx, rax              ;size to print (bytes)                     
@@ -74,8 +73,8 @@ interpreter_loop:
 	mov rsi, error            ;address
 	mov rdi, 2                ;stderr
 	syscall
+	mov pc, xt_interpreter
 	jmp next
-	
 	
 	
 

@@ -178,7 +178,6 @@ read_word:
    jz .go
    cmp r11, r8               ;is the string too big for buffer or not?
    jz .end
-   inc r8         
    mov byte[r10+r8], 0       ;if it is the end of word, then null-terminate
    mov rax, r10              ;return buffer's address
    mov rdx, r8         ;ADDED
