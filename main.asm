@@ -40,16 +40,19 @@ interpreter_loop:
 	test rdx, rdx       ;rdx = str's length
 	jz .exit
 	mov rdi, rax        ;rdi = pointer to a key
-	mov rsi, prev       ;rsi = pointer to the last word in a dict
+	mov rsi, last       ;rsi = pointer to the last word in a dict
 	push rdi	    ;save pointer to a key
 	call find_word
 	test rax, rax
 	pop rdi 
-	jz .no_word
+	jz .no_word	
 	mov rdi, rax        ;rdi = addr
 	call cfa
-	mov [program_stub], rax		;magic
-	mov pc, program_stub		;magic
+
+
+;	mov [program_stub], rax		;magic
+;	mov pc, program_stub		;magic
+	mov pc, rax
 	jmp next
 .exit:
 	mov pc, xt_interpreter

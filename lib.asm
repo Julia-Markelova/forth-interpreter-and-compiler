@@ -181,6 +181,7 @@ read_word:
    inc r8         
    mov byte[r10+r8], 0       ;if it is the end of word, then null-terminate
    mov rax, r10              ;return buffer's address
+   mov rdx, r8         ;ADDED
    ret   
 .end:
    mov rax, 0
