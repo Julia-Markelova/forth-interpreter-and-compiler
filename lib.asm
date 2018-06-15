@@ -158,7 +158,7 @@ read_word:
    ;rdi: buffer
    ;rsi: size
    xor r8, r8                ;counter
-   mov r11, rsi              ;save size  
+   push rsi              ;save size  
    mov r10, rdi              ;save buffer                
 .go:
    call read_char
@@ -176,13 +176,15 @@ read_word:
 .word: 
    test r8, r8               ;have we symbols?
    jz .go
-   cmp r11, r8               ;is the string too big for buffer or not?
+   pop rsi
+   cmp rsi, r8               ;is the string too big for buffer or not?
    jz .end
    mov byte[r10+r8], 0       ;if it is the end of word, then null-terminate
    mov rax, r10              ;return buffer's address
    mov rdx, r8         ;ADDED
    ret   
 .end:
+   pop rsi
    mov rax, 0
    ret
 ;------------------------------------------------------
