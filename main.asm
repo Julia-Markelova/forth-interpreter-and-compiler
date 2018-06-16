@@ -24,6 +24,7 @@ xt_compiler:    dq .compiler
 here: 		dq dict
 memory: 	dq mem
 last_word: 	dq last
+stack_end:	dq 0
 
 ;---------------------------------------------------------
 section .text
@@ -31,6 +32,7 @@ section .text
 _start:
 	mov rstack, rstack_start
 	mov pc, xt_interpreter
+	mov qword[stack_end], rsp
 	jmp next
     
 next:   

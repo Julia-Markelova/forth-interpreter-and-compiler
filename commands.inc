@@ -1,18 +1,18 @@
 %include "util.inc"
 %include "macro.inc"
 ;1
-   native drop, "drop", 0 ;ok
+   native drop, "drop", 0 
 	pop rax
 	jmp next
 ;2
-   native swap, "swap", 0   ;ok
+   native swap, "swap", 0   
 	pop rax
 	pop rdi
 	push rax
 	push rdi
 	jmp next
 ;3
-   native rot, "rot", 0  ;abc bca ;ok
+   native rot, "rot", 0  
 	pop rax
 	pop rdi
 	pop r9
@@ -21,13 +21,13 @@
 	push r9
 	jmp next
 ;4
-   native dup, "dup", 0  ;ok
+   native dup, "dup", 0  
 	pop rax
 	push rax
 	push rax
 	jmp next
 ;5
-   native not, "not", 0	 ;ok
+   native not, "not", 0	
 	pop rax
 	test rax, rax
 	jz .one
@@ -37,21 +37,21 @@
 	push 1
 	jmp next
 ;6
-   native and, "and", 0    ; ok
+   native and, "and", 0    
 	pop rax
 	pop rdi	
 	and rax, rdi
 	push rax
 	jmp next
 ;7
-   native or, "or", 0     ;ok
+   native or, "or", 0    
 	pop rax
 	pop rdi
 	or rax, rdi
 	push rax
 	jmp next
 ;8
-   native land, "land", 0   ;ok
+   native land, "land", 0   
 	pop rax
 	pop rdi
 	test rax, rax
@@ -62,7 +62,7 @@
 	push rax
 	jmp next
 ;9
-   native lor, "lor", 0    ;ok
+   native lor, "lor", 0    
 	pop rax
 	pop rdi
 	test rax, rax
@@ -79,12 +79,12 @@
 	push rax
 	jmp next
 ;11
-   native to_ret, ">r", 0     ; ok
+   native to_ret, ">r", 0     
 	pop rax
 	mov [rstack], rax
 	jmp next
 ;12
-   native from_ret, "r>" , 0 	;ok
+   native from_ret, "r>" , 0 	
 	push qword[rstack]
 	add rstack, 8
 	jmp next
@@ -98,33 +98,33 @@
 	push rdx
 	jmp next
 ;14
-   native r_fetch, "r@", 0   	;ok
+   native r_fetch, "r@", 0   	
 	mov rax, [rstack]
 	push rax
 	jmp next
 ;15
-   native plus, "+", 0     ;ok
+   native plus, "+", 0     
 	pop rax
 	pop rdi
 	add rax, rdi
 	push rax
 	jmp next
 ;16
-   native minus, "-", 0    ;ok
+   native minus, "-", 0   
 	pop rax
 	pop rdi
 	sub rax, rdi	
 	push rax
 	jmp next
 ;17
-     native multiply, "*", 0 ;ok
+     native multiply, "*", 0 
 	pop rax
 	pop rdi
 	imul rdi
 	push rax
 	jmp next
 ;18 
-    native divide, "/", 0     ;ok
+    native divide, "/", 0     
 	pop rax ;delim
 	pop rdi ;delitel'
 	idiv rdi
@@ -132,13 +132,13 @@
 	jmp next
  ;19
     native mod, "%", 0
-	pop rax ;delim         ;ok
+	pop rax ;delim         
 	pop rdi ;delitel'
 	idiv rdi
 	push rdx
 	jmp next
  ;20 
-   native equals, "=" , 0        ;ok
+   native equals, "=" , 0       
       pop rsi
       pop rdi
       cmp rdi, rsi
@@ -149,7 +149,7 @@
       push 1
       jmp next
 ;21 
-     native lt, "<", 0        ;ok
+     native lt, "<", 0       
       pop rsi
       pop rdi
       cmp rsi, rdi
@@ -160,7 +160,7 @@
       push 1
       jmp next
 ;22  
-    native gt, ">", 0 	;ok
+    native gt, ">", 0 	
       pop rsi
       pop rdi
       cmp rdi, rsi
@@ -171,7 +171,7 @@
       push 1
       jmp next
 ;23 
-    native dot, ".", 0       ;ok
+    native dot, ".", 0       
       pop rdi
       call print_int
       call print_newline
@@ -224,10 +224,10 @@
 	push rax
 	jmp next
 ;33
-    native show, ".S", 0	;ERROR +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    native show, ".S", 0	
 	mov rcx, rsp
      .go:
-	;cmp rcx, hui
+	cmp rcx, qword[stack_end]
 	je next
 	mov rdi, [rcx]
 	push rcx
@@ -310,10 +310,7 @@
 	jmp next 
 
 	
-;  native init, "init", 0
 ;  native last_word, "last_word", 0
-;  native syscall, "syscall", 0
-;  native mem, "mem", 0
 ;  native inbuf, "inbuf", 0
 
 
