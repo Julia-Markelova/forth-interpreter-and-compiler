@@ -257,6 +257,17 @@
         mov pc, [pc]
         jmp next
 
+;37 
+   native semicolon, ";", 1
+	mov qword[here], xt_exit
+	mov state, 0
+	jmp next
+;38
+   native colon, ":", 0
+	mov rdi, input_buf
+	mov rsi, 1024
+	call read_word
+	
 
 ;  native docol, "docol", 0
 ;  native exit, "exit", 0	
@@ -284,7 +295,7 @@ find_word:
    mov rdi, rsi            
    call string_length
    pop rdi
-   lea rsi, [rsi + rax + 1 + 1]	;addr of the next word
+   lea rsi, [rsi + rax + 1]	;addr of the next word
    mov rsi, [rsi]
    test rsi, rsi  		;end of a dict?
    jz .no_word
