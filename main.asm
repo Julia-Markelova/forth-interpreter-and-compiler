@@ -32,7 +32,7 @@ section .text
 _start:
 	mov rstack, rstack_start
 	mov pc, xt_interpreter
-	mov qword[stack_end], rsp
+	mov qword[stack_end], rsp ;
 	jmp next
     
 next:   

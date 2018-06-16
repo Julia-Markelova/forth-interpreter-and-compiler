@@ -215,6 +215,7 @@
    native emit, "emit", 0   ;print char      
 	pop rdi
 	call print_char
+	call print_newline
 	jmp next
 ;32	
    native number, "number", 0 ;str -len num  
@@ -296,7 +297,6 @@
 	mov qword[last_word], rsi    ;new lw				 ; save ptr to prev and state
 	add qword[here], 9	    ;lw + state		       ----------;
 
-	
 	mov r8, [here]		    
 	mov qword[r8], docol_impl
 	add qword[here], 8	    ;free mem
@@ -307,12 +307,8 @@
     native state, "state", 0
 	mov rdi, [state]
 	call print_int
+	call print_newline
 	jmp next 
-
-	
-;  native last_word, "last_word", 0
-;  native inbuf, "inbuf", 0
-
 
 ;------------------------------------------------------
 
