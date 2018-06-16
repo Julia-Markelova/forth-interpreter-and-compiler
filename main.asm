@@ -141,21 +141,24 @@ compiler_loop:
 	jz .error		; if no number
 	
 	sub qword[here], 8      ;---------------
-	mov r9, qword[here]     ;check prev word
+	mov r9, [here]          ;check prev word
 	cmp r9, xt_branch       ;---------------
 	jz .br
 	cmp r9, xt_branch0
 	jz .br
 	add qword[here], 8      ;return to free mem
-	mov qword[here], xt_lit
+	mov r8, [here]
+	mov qword[r8], xt_lit
 	add qword[here], 8
-	mov qword[here], rax    ;rax = number
+	mov r8, [here]   
+	mov qword[r8], rax      ;rax = number   
 	add qword[here], 8	;free mem
 	mov pc, xt_interpreter
 	jmp next
 .br:
 	add qword[here], 8      ;return to free mem
-	mov qword[here], rax    ;rax = number
+	mov r8, [here]
+	mov qword[r8], rax    ;rax = number
 	add qword[here], 8	;free mem
 	mov pc, xt_interpreter
 	jmp next

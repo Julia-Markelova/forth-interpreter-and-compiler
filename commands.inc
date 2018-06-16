@@ -73,7 +73,7 @@
 	push rdi
 	jmp next
 ;10  
- native count, "count" , 0       ;str -- len ----COLON------------------------------------------------------------------------
+ native count, "count" , 0       ;str -- len 
 	pop rdi
 	call string_length
 	push rax
@@ -89,7 +89,7 @@
 	add rstack, 8
 	jmp next
 ;13
-  native word, "word" , 0    ;addr -- len     ; ERROR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  native word, "word" , 0    ;addr -- len     
 	pop rdi
 	mov rsi, 1024
 	call read_word
@@ -177,23 +177,23 @@
       call print_newline
       jmp next 
 ;24 
-     native find_word, "find_word", 0    ;ok???-------------------------------------------------------
+     native find_word, "find_word", 0   
        call find_word
        jmp next
 ;25 
-   native cfa, "cfa", 0           ;ok???------------------------------------------------------------
+   native cfa, "cfa", 0          
        call cfa
        jmp next
 ;26
    native bye, "bye", 0		;ok
       call exit
 ;27 
-  native fetch, "@", 0                ;ERROR+++++++++++++++++++++++++++++++++++++++++++++++++++
+  native fetch, "@", 0                
 	pop rax
 	push qword[rax]
 	jmp next
 ;28 
-   native write, "!", 0             ;ERROR+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   native write, "!", 0            
 	pop rax  ;addr
 	pop rdi  ;value
 	mov [rax], rdi
@@ -212,7 +212,7 @@
 	mov [rax], dl
 	jmp next
 ;31
-   native emit, "emit", 0   ;print char      ;ok
+   native emit, "emit", 0   ;print char      
 	pop rdi
 	call print_char
 	jmp next
