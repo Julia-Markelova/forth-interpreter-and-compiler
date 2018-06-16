@@ -15,7 +15,7 @@ input_buf:    resq 1024
 %include "commands.inc"
 ;---------------------------------------------------------
 section .data
-error:          db "Error : unknown word.", 10, 0
+error:          db "Error: unknown word.", 10, 0
 program_stub:   dq 0
 xt_interpreter: dq .interpreter
 .interpreter:   dq interpreter_loop
@@ -55,7 +55,7 @@ interpreter_loop:
 	jz .exit
 	mov rdi, rax        ;rdi = pointer to a key
 	
-	mov rsi, last       ;rsi = pointer to the last word in a dict
+	mov rsi, [last_word];rsi = pointer to the last word in a dict
 	push rdi	    ;save pointer to a key
 	call find_word
 	pop rdi
@@ -105,7 +105,7 @@ compiler_loop:
 	test rdx, rdx
 	jz .exit
 	
-	mov rsi, last_word     
+	mov rsi, [last_word]     
 	mov rdi, rax       ;rdi = pointer to a key
 	push rdi	   ;save pointer to a key	
 	call find_word
@@ -125,7 +125,8 @@ compiler_loop:
 	add qword[here], 8	       
 	mov pc, xt_interpreter
 	jmp next
-.immediate:	
+.immediate:
+        inc rax	
 	mov [program_stub], rax		
 	mov pc, program_stub		
 	jmp next

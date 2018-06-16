@@ -264,7 +264,9 @@
 	jmp next
 ;38
    native semicolon, ";", 1
-	mov qword[here], xt_exit
+        mov r8, [here]
+	mov qword[r8], xt_exit
+        add qword[here], 8
 	mov byte[state], 0
 	jmp next
 ;39
