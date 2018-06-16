@@ -278,15 +278,27 @@
     native colon, ":", 0
 	mov rdi, input_buf
 	mov rsi, 1024
-	call read_word
-	mov qword[here], last_word
-	mov r9, [here]
-	mov qword[here], r9
-	add qword[here], 8	   ;free mem
-	mov qword[here], docol_impl
-	add qword[last_word], 8
-	mov qword[here], last_word 
-	mov byte[state], 1
+	call read_word 		    ;rax = ptr, rdx = len
+	mov rdi, rax 		    ;rax = ptr to word         ----------;
+	mov rsi, [here]		    ;rsi = buf to save			 ;
+	push rsi	  						 ;
+	mov rdx, 1024		    ;rdx = buf size			 ; save word
+	call string_copy	    ;save func name in mem  rdx = len    ;
+	add qword[here], rdx        ;len				 ;
+	add qword[here], 1 	    ;null-term  	       ----------;
+
+	mov r8, [here]
+	mov r9, [last_word]         ;save lw	               ----------;
+	mov qword[r8], r9           ;[here] <- lw			 ;
+	pop rsi								 ;
+	mov qword[last_word], rsi    ;new lw				 ; save ptr to prev and state
+	add qword[here], 9	    ;lw + state		       ----------;
+
+	
+	mov r8, [here]		    
+	mov qword[r8], docol_impl
+	add qword[here], 8	    ;free mem
+	mov qword[state], 1         ;update state
 	jmp next
 	
 ;41

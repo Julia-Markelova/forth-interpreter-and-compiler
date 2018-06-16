@@ -28,7 +28,6 @@ last_word: 	dq last
 ;---------------------------------------------------------
 section .text
 
-
 _start:
 	mov rstack, rstack_start
 	mov pc, xt_interpreter
@@ -72,7 +71,7 @@ interpreter_loop:
 	jmp next
 
 .no_word:
-	mov rdi, rax
+	;mov rdi, rax
 	mov rdi, input_buf
 	call parse_int	        ;check if word is a number
 	test rdx, rdx
@@ -93,6 +92,11 @@ interpreter_loop:
 	
 ;-----------------------------------------------------------
 compiler_loop:
+	cmp byte[state], 0  ; check the state
+	jnz .compiler
+	mov pc, xt_interpreter
+	jmp next
+   .compiler:
 	mov rdi, input_buf
 	mov rsi, 1024
 	call read_word
@@ -100,58 +104,58 @@ compiler_loop:
 	jz .exit
 	test rdx, rdx
 	jz .exit
-	mov rsi, last
+	
+	mov rsi, last_word     
 	mov rdi, rax       ;rdi = pointer to a key
-	push rdi
+	push rdi	   ;save pointer to a key	
 	call find_word
-	pop rdi
-	test rax, rax 
+	pop rdi 	
+	test rax, rax 	   ;any word?
 	jz .no_word
+	
 	mov rdi, rax       ; rdi = addr
 	call cfa	
-	mov r9, rax        ; r9 = xt
-	mov r8, r9
-	sub r8, 1
-	cmp r8, 1
+	sub rax, 1         ;rax = xt, rax - 1 = state
+	cmp byte[rax], 1   ;immediate?
 	jz .immediate
-	mov r8, [here]           ;------- -------;
-	mov r8, [r8]             ;[[here]] <- xt ; 
-	mov qword[here], r8      ;---------------;
-	mov qword[here], r9
-	add qword[here], 8	        ;magic
+	
+	inc rax            ;rax = xt
+	mov r8, [here]          
+	mov qword[r8], rax      
+	add qword[here], 8	       
 	mov pc, xt_interpreter
 	jmp next
 .immediate:	
-	mov [program_stub], rax		;magic
-	mov pc, program_stub		;magic
+	mov [program_stub], rax		
+	mov pc, program_stub		
 	jmp next
 .exit:
 	mov pc, xt_interpreter
 	jmp next
 .no_word:
-	mov rdi, rax
+	;mov rdi, rax
 	mov rdi, input_buf
 	call parse_int	        ;check if word is a number
 	test rdx, rdx
 	jz .error		; if no number
-	mov qword[here], r9
-	sub r9, 8
-	cmp qword[r9], xt_branch
+	
+	sub qword[here], 8      ;---------------
+	mov r9, qword[here]     ;check prev word
+	cmp r9, xt_branch       ;---------------
 	jz .br
-	cmp qword[r9], xt_branch0
+	cmp r9, xt_branch0
 	jz .br
+	add qword[here], 8      ;return to free mem
 	mov qword[here], xt_lit
 	add qword[here], 8
-	mov qword[here], rax
-	add qword[here], 8
+	mov qword[here], rax    ;rax = number
+	add qword[here], 8	;free mem
 	mov pc, xt_interpreter
 	jmp next
 .br:
-	mov r8, qword[here]
-	mov r8, [r8]
-	mov qword[here], r8
-	mov qword[here], rax
-	add qword[here], 8
+	add qword[here], 8      ;return to free mem
+	mov qword[here], rax    ;rax = number
+	add qword[here], 8	;free mem
 	mov pc, xt_interpreter
 	jmp next
 .error:

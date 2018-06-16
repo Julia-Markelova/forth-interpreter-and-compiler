@@ -250,6 +250,7 @@ string_equals:
 string_copy:
  ;  rdi                       ;pointer to a string
   ; rsi                       ;pointer to a buffer
+  ;rdx			      ;buf size
    mov r9, rdx                ;save buffer's length
    call string_length          
    cmp rax, r9                ;compare lengths
@@ -268,6 +269,8 @@ string_copy:
    ret
 .end2:
    mov rax, rsi
+   mov rdx, r9                ;len ADDED!
+   add rdx, 1
    ret
 
       
