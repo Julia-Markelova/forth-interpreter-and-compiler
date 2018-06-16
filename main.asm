@@ -19,6 +19,8 @@ error:          db "Error : unknown word.", 10, 0
 program_stub:   dq 0
 xt_interpreter: dq .interpreter
 .interpreter:   dq interpreter_loop
+xt_compiler:    dq .compiler
+.compiler:	dq compiler_loop
 here: 		dq dict
 memory: 	dq mem
 last_word: 	dq last
@@ -31,7 +33,7 @@ _start:
 	mov rstack, rstack_start
 	mov pc, xt_interpreter
 	jmp next
-
+    
 next:   
 	mov w, pc
 	add pc, 8
@@ -40,6 +42,11 @@ next:
 
 ;----------------------------------------------------------
 interpreter_loop:
+	cmp byte[state], 0  ; check the state
+	jz .inter
+	mov pc, xt_compiler
+	jmp next
+    .inter:
 	mov rdi, input_buf  ;place to save word
 	mov rsi, 1024       ;size of buf
 	call read_word

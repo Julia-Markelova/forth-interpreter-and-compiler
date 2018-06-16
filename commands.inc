@@ -258,25 +258,50 @@
         jmp next
 
 ;37 
-   native semicolon, ";", 1
-	mov qword[here], xt_exit
-	mov state, 0
+    native exit, "exit", 0
+	mov pc, [rstack]
+	add rstack, 8
 	jmp next
 ;38
-   native colon, ":", 0
+   native semicolon, ";", 1
+	mov qword[here], xt_exit
+	mov byte[state], 0
+	jmp next
+;39
+    native docol, "docol", 0
+	sub rstack, 8
+	mov [rstack], pc
+	add w, 8
+	mov pc, w
+	jmp next
+;40
+    native colon, ":", 0
 	mov rdi, input_buf
 	mov rsi, 1024
 	call read_word
+	mov qword[here], last_word
+	mov r9, [here]
+	mov qword[here], r9
+	add qword[here], 8	   ;free mem
+	mov qword[here], docol_impl
+	add qword[last_word], 8
+	mov qword[here], last_word 
+	mov byte[state], 1
+	jmp next
 	
+;41
+    native state, "state", 0
+	mov rdi, [state]
+	call print_int
+	jmp next 
 
-;  native docol, "docol", 0
-;  native exit, "exit", 0	
+	
 ;  native init, "init", 0
 ;  native last_word, "last_word", 0
 ;  native syscall, "syscall", 0
 ;  native mem, "mem", 0
 ;  native inbuf, "inbuf", 0
-;  native state, "state", 0
+
 
 ;------------------------------------------------------
 
